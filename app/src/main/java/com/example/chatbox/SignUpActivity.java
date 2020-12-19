@@ -33,6 +33,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private FirebaseAuth mAuth;
     private DatabaseReference userRef;
     private StorageReference userPicRef;
+
+    private DatabaseReference RootRef;
     String currentUserId, downloadImageUrl;
     LinearLayout signUpLayout;
 
@@ -43,6 +45,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         FirebaseApp.initializeApp(this);
         mAuth = FirebaseAuth.getInstance();
+        //RootRef = FirebaseDatabase.getInstance().getReference();
 
         //currentUserId = mAuth.getCurrentUser().getUid();  // this line will cause error, because no user is available and try to invoke null object
         // userRef = FirebaseDatabase.getInstance().getReference().child("UserProfile").child(currentUserId);
@@ -107,6 +110,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                                 finish();
                                 mAuth.signOut();  // to stop automatic login without verify
                                 Toast.makeText(SignUpActivity.this, "Verify your email address and login", Toast.LENGTH_SHORT).show();
+                                updateUID();
                                 Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
                                 startActivity(intent);
                             }
@@ -128,6 +132,13 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
 
+    }
+
+    private void updateUID(){
+        //updateUID upUid = new updateUID();
+        /*currentUserId = mAuth.getCurrentUser().getUid();
+        RootRef = FirebaseDatabase.getInstance().getReference();
+        RootRef.child("Users").child(currentUserId).setValue("");//.child("uid").setValue(currentUserId);*/
     }
 
    /* public void updateUserName(String userName)

@@ -11,6 +11,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
@@ -24,6 +26,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.concurrent.TimeUnit;
 
@@ -37,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout tabLayout;
 
     private FirebaseAuth mAuth;
+    private DatabaseReference rootRef;
 
     private TabAccesstorAdapter mTabAccessorAdapter;
     String verificationId;
@@ -64,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         */
     }
 
-    protected void onStart() {
+   /* protected void onStart() {
 
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -73,8 +81,12 @@ public class MainActivity extends AppCompatActivity {
         {
             sendUserToLoginActivity();
         }
+        else
+        {
+            //verifyUserExistance();
+        }
 
-    }
+    }*/
 
     private void sendUserToLoginActivity() {
         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
@@ -99,7 +111,8 @@ public class MainActivity extends AppCompatActivity {
 
         if(item.getItemId()== R.id.settingsId)
         {
-
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(intent);
         }
 
         if(item.getItemId()== R.id.logoutId)
@@ -110,5 +123,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onBackPressed(){
+        Intent a = new Intent(Intent.ACTION_MAIN);
+        a.addCategory(Intent.CATEGORY_HOME);
+        a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(a);
     }
 }

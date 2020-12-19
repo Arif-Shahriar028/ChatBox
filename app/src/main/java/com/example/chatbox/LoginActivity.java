@@ -22,6 +22,11 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -30,6 +35,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private FirebaseAuth mAuth;
     private EditText email, password;
     private TextView forgetPassword;
+    private String currentUserId;
+    private DatabaseReference RootRef;
+    private FirebaseDatabase database;
     LinearLayout loginLayout;
 
     @Override
@@ -88,8 +96,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             //finish();  // to end this activity
                             if(mAuth.getCurrentUser().isEmailVerified())
                             {
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                startActivity(intent);
+                                //updateUID();
+                                //updateUID uid = new updateUID();
+                                verifyUserExistance();
+                               /* Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                startActivity(intent);*/
+                                //finish();
                             }
                             else{
                                 Toast.makeText(LoginActivity.this, "Please verify your email", Toast.LENGTH_SHORT).show();
@@ -127,10 +139,45 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         if (currentUser != null)   // if user not signed in
         {
+            //verifyUserExistance();
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
         }
+    }
+
+    private void updateUID(){
+        currentUserId = mAuth.getCurrentUser().getUid();
+        RootRef = FirebaseDatabase.getInstance().getReferenceFromUrl("https://chatbox-df266-default-rtdb.firebaseio.com/");
+        RootRef.child("UserProfile").child(currentUserId).child("uid").setValue(currentUserId);
+        RootRef.child("UserProfile").child(currentUserId).child("name").setValue("User Name");
+        RootRef.child("UserProfile").child(currentUserId).child("status").setValue("Hey! I am available now.");
+    }
+
+    private void verifyUserExistance(){
+        String currentUId = mAuth.getCurrentUser().getUid();
+
+        RootRef = FirebaseDatabase.getInstance().getReferenceFromUrl("https://chatbox-df266-default-rtdb.firebaseio.com/");
+        RootRef.child("UserProfile").child(currentUId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if((snapshot.child("name").exists())){
+                    Toast.makeText(LoginActivity.this, "Welcome", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                }
+                else{
+                    updateUID();
+                    Intent intent = new Intent(LoginActivity.this, SettingsActivity.class);
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     public void onBackPressed(){
