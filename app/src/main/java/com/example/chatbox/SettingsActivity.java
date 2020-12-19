@@ -146,6 +146,7 @@ public class SettingsActivity extends AppCompatActivity {
         });
     }
 
+
     private void toast(String s){
         Toast.makeText(SettingsActivity.this, s, Toast.LENGTH_SHORT).show();
     }
