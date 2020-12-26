@@ -7,6 +7,12 @@
         />
 
     <item
+        android:id="@+id/createGroupId"
+        android:title="Creat group"
+
+        />
+
+    <item
         android:id="@+id/settingsId"
         android:title="Settings"
         />

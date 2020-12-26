@@ -1,10 +1,13 @@
 package com.example.chatbox;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -31,6 +34,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import org.w3c.dom.Text;
 
 import java.util.concurrent.TimeUnit;
 
@@ -109,6 +114,11 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
+        if(item.getItemId()== R.id.createGroupId)
+        {
+            requestNewGroup();
+        }
+
         if(item.getItemId()== R.id.settingsId)
         {
             Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
@@ -123,6 +133,49 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void requestNewGroup(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AlertDialog);
+        builder.setTitle("Enter group name :");
+        final EditText groupNameField = new EditText(MainActivity.this);
+        groupNameField.setHint("Group name");
+        builder.setView(groupNameField);
+
+        builder.setPositiveButton("Creat", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String groupName = groupNameField.getText().toString();
+                if(TextUtils.isEmpty(groupName)){
+                    Toast.makeText(MainActivity.this, "Please write group name", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    createNewGroup(groupName);
+                }
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
+    private void createNewGroup(String groupName){
+        rootRef = FirebaseDatabase.getInstance().getReference();
+        rootRef.child("Groups").child(groupName).setValue("")
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            Toast.makeText(MainActivity.this, "Group created successully", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
     public void onBackPressed(){
