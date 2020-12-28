@@ -1,5 +1,6 @@
 package com.example.chatbox;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,6 +10,7 @@ import androidx.fragment.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -50,9 +52,20 @@ public class groupFragment extends Fragment {
         groupFragmentView = inflater.inflate(R.layout.fragment_group, container, false);
         groupRef = FirebaseDatabase.getInstance().getReference().child("Groups");
 
+        listView = (ListView) groupFragmentView.findViewById(R.id.listViewId);
+
         retrieveGroups();
 
-        //initializeFields();
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                String currentGroupName = adapterView.getItemAtPosition(position).toString();
+                Intent intent = new Intent(getContext(), GroupChatActivity.class);
+                intent.putExtra("groupName", currentGroupName);
+                startActivity(intent);
+            }
+        });
+
         return groupFragmentView;
     }
 
@@ -82,7 +95,6 @@ public class groupFragment extends Fragment {
                 listOfGroups.clear();
                 listOfGroups.addAll(set);
 
-                listView = (ListView) groupFragmentView.findViewById(R.id.listViewId);
                 arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, listOfGroups);
                 listView.setAdapter(arrayAdapter);
                 arrayAdapter.notifyDataSetChanged();

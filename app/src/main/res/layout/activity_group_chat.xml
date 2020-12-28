@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".GroupChatActivity">
+
+    <include
+        android:id="@+id/groupChatAppBarId"
+        layout="@layout/action_bar_layout"
+        />
+
+    <ScrollView
+        android:layout_below="@id/groupChatAppBarId"
+        android:layout_above="@+id/bottomLinearLayoutId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollViewId"
+        android:focusable="true"
+        android:padding="10dp"
+        >
+
+            <TextView
+                android:id="@+id/messageTextId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="#000000"
+                android:gravity="bottom"
+                android:scrollbars="vertical"
+                />
+
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/bottomLinearLayoutId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:padding="10dp"
+        >
+
+        <EditText
+            android:id="@+id/writeMessageId"
+            android:layout_width="280dp"
+            android:layout_height="60dp"
+            android:hint="write message"
+            />
+
+        <ImageButton
+            android:layout_margin="5dp"
+            android:id="@+id/sendButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/send"
+            />
+
+    </LinearLayout>
+
+</RelativeLayout>
